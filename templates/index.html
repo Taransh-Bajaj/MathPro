@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MathPro</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="app">
+    <h1>MathPro</h1>
+
+    <div id="chat"></div>
+
+    <div class="input-box">
+        <input id="msg" placeholder="Enter math expression..." />
+        <button onclick="send()">=</button>
+    </div>
+</div>
+
+<script>
+async function send() {
+    const input = document.getElementById("msg");
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = "";
+    chat.innerHTML += `<div class="user">${text}</div>`;
+
+    const res = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: text})
+    });
+
+    const data = await res.json();
+    chat.innerHTML += `<div class="bot">${data.reply}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
